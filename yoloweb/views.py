@@ -1,12 +1,11 @@
-import cv2
 from django.http import StreamingHttpResponse
 from django.shortcuts import render
+import cv2
 from ultralytics import YOLO
 
 
-# Create your views here.
 def base(request):
-    return render(request, "yoloweb/base.html")
+    return render(request, 'yoloweb/index.html')
 
 
 def stream():
@@ -14,14 +13,7 @@ def stream():
     results = model('video.mp4', show=True, stream=True)  # List of Results objects
 
     for result, frame in results:
-        # boxes = result[0].boxes.numpy()  # Boxes object for bbox outputs
-        # for box in boxes:  # there could be more than one detection
-        #     print("class", box.cls)
-        #     print("xyxy", box.xyxy)
-        #     print("conf", box.conf)
-
         ret, jpeg = cv2.imencode('.jpg', frame)
-
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n')
 

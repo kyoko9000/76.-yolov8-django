@@ -1,8 +1,8 @@
 from django.urls import path
 
-from yoloweb.views import base, video_feed
+from yoloweb import views
 
 urlpatterns = [
-    path("", base, name="base"),
-    path("yolo/", video_feed, name="stream")
+    path("", views.base, name="base"),
+    path("yolo/", views.video_feed, name="stream")
 ]
