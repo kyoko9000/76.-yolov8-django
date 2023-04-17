@@ -13,6 +13,8 @@ def stream():
     results = model('video.mp4', show=True, stream=True)  # List of Results objects
 
     for result, frame in results:
+        w, h, c = frame.shape
+        frame = cv2.resize(frame, (int(h/2), int(w/2)), interpolation=cv2.INTER_LINEAR)
         ret, jpeg = cv2.imencode('.jpg', frame)
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n')
