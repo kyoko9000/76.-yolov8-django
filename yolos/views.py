@@ -1,5 +1,3 @@
-import threading
-
 from django.http import StreamingHttpResponse
 from django.shortcuts import render
 import cv2
