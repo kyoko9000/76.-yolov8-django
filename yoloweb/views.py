@@ -5,7 +5,7 @@ from ultralytics import YOLO
 
 
 def base(request):
-    return render(request, 'yoloweb/index.html')
+    return render(request, 'yoloweb/index1.html')
 
 
 def stream():
