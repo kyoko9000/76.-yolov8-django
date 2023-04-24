@@ -1,3 +1,5 @@
+import threading
+
 from django.http import StreamingHttpResponse
 from django.shortcuts import render
 import cv2
@@ -8,7 +10,8 @@ def base(request):
     return render(request, 'yolos/index1.html')
 
 
-def stream(link):
+def stream(link, num):
+    print("thread: ", num)
     model = YOLO("yolov8n.pt")  # load a pretrained model (recommended for training)
     results = model(link, show=True, stream=True)  # List of Results objects
 
@@ -19,13 +22,15 @@ def stream(link):
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + jpeg.tobytes() + b'\r\n')
 
+    x = threading.Thread(target=stream, args=(num,))
+    x.start()
     # Destroy all the windows
     cv2.destroyAllWindows()
 
 
 def video_feed(request):
-    return StreamingHttpResponse(stream('video.mp4'), content_type='multipart/x-mixed-replace; boundary=frame')
+    return StreamingHttpResponse(stream('video.mp4', 1), content_type='multipart/x-mixed-replace; boundary=frame')
 
 
 def video_feed_1(request):
-    return StreamingHttpResponse(stream('video1.mp4'), content_type='multipart/x-mixed-replace; boundary=frame')
+    return StreamingHttpResponse(stream('video1.mp4', 2), content_type='multipart/x-mixed-replace; boundary=frame')
